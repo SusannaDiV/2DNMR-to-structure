@@ -1,59 +1,37 @@
 # README
 
-This repository contains scripts for dataset preparation and model training as described in the paper: *Leveraging Pre-Trained LMs for Rapid and Accurate Structure Elucidation from 2D NMR Data*. The models in this repository utilize pre-trained T5 models to predict SMILES strings from 2D NMR spectra, offering significant advantages in both accuracy and speed when applied to structure elucidation tasks.
+This repository contains scripts for dataset preparation and model training as described in the paper: *Leveraging Pre-Trained LMs for Rapid and Accurate Structure Elucidation from 2D NMR Data*. The models in this repository utilize pre-trained T5 models to predict SMILES strings from 2D NMR spectra and molecular structure. Please ensure SMILES string validity before preprocessing.
 
 ## Prerequisites
 
-Ensure that you have the following libraries installed before running any scripts:
+All required libraries are listed in the requirements.txt file. You can installall dependencies using:
 
-- Python 3.x
-- Pandas
-- Numpy
-- Scikit-learn
-- TensorFlow or PyTorch (depending on the model implementation)
-
-You can install dependencies using:
-
-```bash
-pip install pandas numpy scikit-learn tensorflow  # or torch
+pip install -r requireemnts.txt
 
 Dataset Preparation
 1. Categorize SMILES strings
-To prepare your SMILES strings by categorizing them, use the categorize_smiles.py script:
+Categorizes your SMILES accordingly to their complexity. The paper results where achieved by keeping SMILES from 'Very Easy' to 'Moderate' difficulty from the cite3d datasets.
 
-bash
-Copy code
 python categorize_smiles.py /path/to/input_file /path/to/output_file
 /path/to/input_file: Path to the input file containing raw SMILES strings.
 /path/to/output_file: Path to save the categorized SMILES strings.
-This script processes the SMILES strings and categorizes them based on chemical properties, allowing better data handling for the model training.
 
 2. Find Isomers
-You can use the find_isomers.py script to identify potential isomers in your dataset:
+You can use the find_isomers.py script to identify and quantify potential isomers in your dataset:
 
-bash
-Copy code
 python find_isomers.py /path/to/smiles_file.csv
 /path/to/smiles_file.csv: Path to the CSV file containing SMILES strings.
-This script analyzes the SMILES strings and detects isomeric structures for further processing.
 
 Training the Models
-1. Sequential Model
-The sequential_model.py script trains a model using the NMR spectra as input and SMILES strings as the target output:
+Both models take in input a list of molecular formula + list of (x, y, intenisty) 2D NMR spectra separated by ¦ alongside a file containing the SMILES strings as the target output:
 
-bash
-Copy code
 python sequential_model.py --train_src "path/to/train_nmr.src" --train_tgt "path/to/train_smiles.tgt" --test_src "path/to/test_nmr.src" --test_tgt "path/to/test_smiles.tgt" --output_dir "./save_model_directory"
 train_src: Path to the training NMR spectra file.
 train_tgt: Path to the training SMILES file.
 test_src: Path to the testing NMR spectra file.
 test_tgt: Path to the testing SMILES file.
 output_dir: Directory to save the trained model and results.
-2. Conditioned Model
-The conditioned_model.py script trains a model with additional conditions on the NMR data for better control over predictions:
 
-bash
-Copy code
 python conditioned_model.py --train_src "path/to/train_nmr.src" --train_tgt "path/to/train_smiles.tgt" --test_src "path/to/test_nmr.src" --test_tgt "path/to/test_smiles.tgt" --output_dir "./save_model_directory"
 train_src: Path to the training NMR spectra file.
 train_tgt: Path to the training SMILES file.
@@ -62,92 +40,7 @@ test_tgt: Path to the testing SMILES file.
 output_dir: Directory to save the trained model and results.
 Both models will output results to the specified directory, including training logs, model checkpoints, and evaluation results.
 
-Additional Notes
 Ensure that your NMR data and SMILES files are correctly formatted.
+
 License
-This project is licensed under the MIT License. See LICENSE for more details.
-
-kotlin
-Copy code
-
-You can now copy and paste this markdown directly.
-
-
-
-
-
-You said:
-give me the markdown for everzthing
-ChatGPT said:
-ChatGPT
-Here is the full markdown for the entire README:
-
-markdown
-Copy code
-# README
-
-This repository contains scripts for dataset preparation and model training as described in the paper: *Leveraging Pre-Trained LMs for Rapid and Accurate Structure Elucidation from 2D NMR Data*. The models in this repository utilize pre-trained T5 models to predict SMILES strings from 2D NMR spectra, offering significant advantages in both accuracy and speed when applied to structure elucidation tasks.
-
-## Prerequisites
-
-Ensure that you have the following libraries installed before running any scripts:
-
-- Python 3.x
-- Pandas
-- Numpy
-- Scikit-learn
-- TensorFlow or PyTorch (depending on the model implementation)
-
-You can install dependencies using:
-
-```bash
-pip install pandas numpy scikit-learn tensorflow  # or torch
-Dataset Preparation
-1. Categorize SMILES strings
-To prepare your SMILES strings by categorizing them, use the categorize_smiles.py script:
-
-bash
-Copy code
-python categorize_smiles.py /path/to/input_file /path/to/output_file
-/path/to/input_file: Path to the input file containing raw SMILES strings.
-/path/to/output_file: Path to save the categorized SMILES strings.
-This script processes the SMILES strings and categorizes them based on chemical properties, allowing better data handling for the model training.
-
-2. Find Isomers
-You can use the find_isomers.py script to identify potential isomers in your dataset:
-
-bash
-Copy code
-python find_isomers.py /path/to/smiles_file.csv
-/path/to/smiles_file.csv: Path to the CSV file containing SMILES strings.
-This script analyzes the SMILES strings and detects isomeric structures for further processing.
-
-Training the Models
-1. Sequential Model
-The sequential_model.py script trains a model using the NMR spectra as input and SMILES strings as the target output:
-
-bash
-Copy code
-python sequential_model.py --train_src "path/to/train_nmr.src" --train_tgt "path/to/train_smiles.tgt" --test_src "path/to/test_nmr.src" --test_tgt "path/to/test_smiles.tgt" --output_dir "./save_model_directory"
-train_src: Path to the training NMR spectra file.
-train_tgt: Path to the training SMILES file.
-test_src: Path to the testing NMR spectra file.
-test_tgt: Path to the testing SMILES file.
-output_dir: Directory to save the trained model and results.
-2. Conditioned Model
-The conditioned_model.py script trains a model with additional conditions on the NMR data for better control over predictions:
-
-bash
-Copy code
-python conditioned_model.py --train_src "path/to/train_nmr.src" --train_tgt "path/to/train_smiles.tgt" --test_src "path/to/test_nmr.src" --test_tgt "path/to/test_smiles.tgt" --output_dir "./save_model_directory"
-train_src: Path to the training NMR spectra file.
-train_tgt: Path to the training SMILES file.
-test_src: Path to the testing NMR spectra file.
-test_tgt: Path to the testing SMILES file.
-output_dir: Directory to save the trained model and results.
-Both models will output results to the specified directory, including training logs, model checkpoints, and evaluation results.
-
-Additional Notes
-Ensure that your NMR data and SMILES files are correctly formatted.
-
-
+This project is licensed under the MIT License. 
