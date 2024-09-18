@@ -6,7 +6,6 @@ import numpy as np
 import wandb
 import argparse
 
-# Initialize Weights & Biases project
 wandb.init(project="molecule-generation", name="Formula Conditioned SMILES Generation")
 
 # Argument parser for input files and directories
@@ -70,31 +69,26 @@ def load_data(src_path, tgt_path):
         
     return src_lines, tgt_lines
 
-# Set device to GPU if available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if torch.cuda.is_available():
     print(f"CUDA is available. Device count: {torch.cuda.device_count()}")
 else:
     print("CUDA is not available.")
 
-# Load data
 train_src_texts, train_tgt_texts = load_data(args.train_src, args.train_tgt)
 test_src_texts, test_tgt_texts = load_data(args.test_src, args.test_tgt)
 
 print(f"Training data - src: {len(train_src_texts)}, tgt: {len(train_tgt_texts)}")
 print(f"Testing data - src: {len(test_src_texts)}, tgt: {len(test_tgt_texts)}")
 
-# Load tokenizer and model
 tokenizer = T5Tokenizer.from_pretrained("t5-small")
 model = T5ForConditionalGeneration.from_pretrained("t5-small").to(device)
 
-# Prepare datasets and dataloaders
 train_dataset = MoleculeDataset(train_src_texts, train_tgt_texts, tokenizer)
 test_dataset = MoleculeDataset(test_src_texts, test_tgt_texts, tokenizer)
 train_dataloader = DataLoader(train_dataset, batch_size=2, collate_fn=train_dataset.collate_fn, pin_memory=True)
 test_dataloader = DataLoader(test_dataset, batch_size=2, collate_fn=test_dataset.collate_fn, pin_memory=True)
 
-# Define training arguments
 training_args = TrainingArguments(
     output_dir=args.output_dir,          
     num_train_epochs=3,              
@@ -105,7 +99,6 @@ training_args = TrainingArguments(
     fp16=True, 
 )
 
-# Initialize the Trainer
 trainer = Trainer(
     model=model,                         
     args=training_args,                  
@@ -114,10 +107,8 @@ trainer = Trainer(
     data_collator=train_dataset.collate_fn  
 )
 
-# Train the model
 trainer.train()
 
-# Save the model and tokenizer
 model.save_pretrained(f'{args.output_dir}/model')
 tokenizer.save_pretrained(f'{args.output_dir}/tokenizer')
 
